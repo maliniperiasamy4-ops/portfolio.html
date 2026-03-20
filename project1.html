@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Portfolio</title>
+
+<style>
+/* ===== GLOBAL STYLES ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  overflow-x: hidden;
+  transition: 0.3s;
+}
+
+body.light {
+  background: #f4f4f4;
+  color: #222;
+}
+
+/* ===== NAVBAR ===== */
+nav {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 50px;
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.05);
+  z-index: 1000;
+}
+
+nav h2 {
+  font-weight: bold;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: inherit;
+  transition: 0.3s;
+}
+
+nav ul li a:hover {
+  color: #00d4ff;
+}
+
+/* ===== HERO ===== */
+.hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 50px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+}
+
+.hero span {
+  color: #00d4ff;
+}
+
+/* ===== BUTTON ===== */
+.btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 30px;
+  margin-top: 20px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #00d4ff, #007cf0);
+  color: #fff;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: scale(1.1);
+}
+
+/* ===== SECTION ===== */
+section {
+  padding: 100px 50px;
+}
+
+.card {
+  background: rgba(255,255,255,0.08);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  margin: 10px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+/* ===== GRID ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+  gap: 20px;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  padding: 30px;
+  background: rgba(0,0,0,0.3);
+}
+
+/* ===== ANIMATION ===== */
+.hidden {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.6s ease;
+}
+
+.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <h2>MyPortfolio</h2>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button onclick="toggleTheme()" class="btn">🌙</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>I am <span id="typing"></span></h1>
+  <p>Full-stack developer creating beautiful and functional web experiences.</p>
+  <button class="btn" onclick="scrollToSection('projects')">View Projects</button>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="hidden">
+  <h2>About Me</h2>
+  <p>I build scalable full-stack applications using modern technologies.</p>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="hidden">
+  <h2>Projects</h2>
+  <div class="grid" id="projectContainer"></div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="hidden">
+  <h2>Contact</h2>
+  <p>Email:maliniperiasamy4@gmail.com<p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 My Portfolio</p>
+</footer>
+
+<script>
+/* ===== TYPING EFFECT ===== */
+const text = ["Developer", "Designer", "Freelancer"];
+let i = 0, j = 0, currentText = "", isDeleting = false;
+
+function type() {
+  currentText = text[i];
+  document.getElementById("typing").textContent =
+    currentText.substring(0, j);
+
+  if (!isDeleting && j < currentText.length) {
+    j++;
+  } else if (isDeleting && j > 0) {
+    j--;
+  } else {
+    isDeleting = !isDeleting;
+    if (!isDeleting) i = (i + 1) % text.length;
+  }
+  setTimeout(type, isDeleting ? 50 : 100);
+}
+type();
+
+/* ===== THEME TOGGLE ===== */
+function toggleTheme() {
+  document.body.classList.toggle("light");
+}
+
+/* ===== SCROLL ===== */
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+}
+
+/* ===== PROJECT DATA ===== */
+const projects = [
+  { name: "Portfolio Website", desc: "Personal website with animations" },
+  { name: "E-commerce App", desc: "Full-stack shopping platform" },
+  { name: "Chat App", desc: "Real-time messaging app" }
+];
+
+const container = document.getElementById("projectContainer");
+
+projects.forEach(p => {
+  const div = document.createElement("div");
+  div.className = "card";
+  div.innerHTML = `<h3>${p.name}</h3><p>${p.desc}</p>`;
+  container.appendChild(div);
+});
+
+/* ===== SCROLL ANIMATION ===== */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("show");
+    }
+  });
+});
+
+document.querySelectorAll(".hidden").forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
